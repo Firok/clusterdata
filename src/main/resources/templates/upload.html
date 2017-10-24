@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:sd="http://www.thymeleaf.org/spring-data"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<link th:href="@{/webjars/bootstrap/3.3.7/css/bootstrap.min.css}"
+	rel="stylesheet" media="screen" />
+<link href="../../static/css/app.css" th:href="@{/css/app.css}"
+	rel="stylesheet" media="screen" />
+<title>Upload File</title>
+</head>
+<body class="App">
+
+	<div class="container-fluid">
+		<div class="row">
+			<div th:if="${message}" class="App-content">
+				<h2 th:text="${message}" />
+			</div>
+		</div>
+		<div class="row">
+			<form class="App-form" method="POST" enctype="multipart/form-data">
+				<div class="form-group">
+					<label for="file">File to upload</label> <input type="file"
+						id="file" name="multipartFile" class="form-control" />
+				</div>
+				<input type="submit" class="btn btn-success" value="Upload" />
+			</form>
+		</div>
+
+		<div class="row">
+			<form method="post" class="App-form-search form-inline"
+				action="/clusterdata/inquire">
+				<div class="form-group">
+					<input type="text" id="inquire" name="inquire" class="form-control"
+						placeholder="Inquire..." aria-label="Inquire" />
+				</div>
+				<input type="submit" class="btn btn-primary" value="Inquire" />
+			</form>
+		</div>
+
+		<div class="row">
+			<div class="col-md-6">
+
+				<h2>Valid Deals</h2>
+				<br />
+				<table class="table table-bordered">
+					<thead>
+						<tr>
+							<td>Deal Unique Id</td>
+							<td>From Currency</td>
+							<td>To Currency</td>
+							<td>Deal timestamp</td>
+							<td>Deal Amount</td>
+						</tr>
+					</thead>
+					<tbody>
+						<tr th:each="item : ${validDeals}">
+							<td th:text="${item.dealId}">dealId</td>
+							<td th:text="${item.fromCurrency.isoCode}">fromCurrency
+								isoCode}</td>
+							<td th:text="${item.toCurrency.isoCode}">toCurrency isoCode}</td>
+							<td th:text="${item.timestamp}">timestamp</td>
+							<td th:text="${item.amount + ' ' + item.fromCurrency.isoCode}">amount</td>
+						</tr>
+					</tbody>
+				</table>
+
+			</div>
+
+			<div class="col-md-6">
+				<h2>Invalid Deals</h2>
+				<br />
+				<table class="table table-bordered">
+					<thead>
+						<tr>
+							<td>Deal Id</td>
+							<td>From Currency</td>
+							<td>To Currency</td>
+							<td>Deal timestamp</td>
+							<td>Deal Amount</td>
+						</tr>
+					</thead>
+					<tbody>
+						<tr th:each="item : ${invalidDeals}">
+							<td th:text="${item.dealId}">dealId</td>
+							<td th:text="${item.fromCurrency}">fromCurrency isoCode}</td>
+							<td th:text="${item.toCurrency}">toCurrency isoCode}</td>
+							<td th:text="${item.timeStamp}">timestamp</td>
+							<td th:text="${item.amount + ' ' +item.fromCurrency}">amount</td>
+						</tr>
+					</tbody>
+				</table>
+
+			</div>
+
+		</div>
+		<div class="row">
+			<div class="col-md-6" th:if="${page}">
+				<ul class="pagination pagination-centered">
+					<li th:class="${page.firstPage}?'disabled':''"><span
+						th:if='${page.firstPage}'>← First</span> <a
+						th:if='${not page.firstPage}'
+						th:href='@{${page.url}(page=0,size=${page.size})}'>← First</a></li>
+					<li th:class="${page.hasPreviousPage}? '' : 'disabled'"><span
+						th:if='${not page.hasPreviousPage}'>«</span> <a
+						th:if='${page.hasPreviousPage}'
+						th:href='@{${page.url}(page=${page.number-2},size=${page.size})}'
+						title='Go to previous page'>«</a></li>
+					<li th:each='item : ${page.items}'
+						th:class="${item.current}? 'active' : ''"><span
+						th:if='${item.current}' th:text='${item.number}'>1</span> <a
+						th:if='${not item.current}'
+						th:href='@{${page.url}(page=${item.number-1},size=${page.size})}'><span
+							th:text='${item.number}'>1</span></a></li>
+					<li th:class="${page.hasNextPage}? '' : 'disabled'"><span
+						th:if='${not page.hasNextPage}'>»</span> <a
+						th:if='${page.hasNextPage}'
+						th:href='@{${page.url}(page=${page.number},size=${page.size})}'
+						title='Go to next page'>»</a></li>
+					<li th:class="${page.lastPage}? 'disabled' : ''"><span
+						th:if='${page.lastPage}'>Last →</span> <a
+						th:if='${not page.lastPage}'
+						th:href='@{${page.url}(page=${page.totalPages - 1},size=${page.size})}'>Last
+							→</a></li>
+				</ul>
+			</div>
+
+			<div class="col-md-6" th:if="${pageInvalid}">
+				<ul class="pagination pagination-centered">
+					<li th:class="${pageInvalid.firstPage}?'disabled':''"><span
+						th:if='${pageInvalid.firstPage}'>← First</span> <a
+						th:if='${not pageInvalid.firstPage}'
+						th:href='@{${pageInvalid.url}(page=0,size=${pageInvalid.size})}'>←
+							First</a></li>
+					<li th:class="${pageInvalid.hasPreviousPage}? '' : 'disabled'"><span
+						th:if='${not pageInvalid.hasPreviousPage}'>«</span> <a
+						th:if='${pageInvalid.hasPreviousPage}'
+						th:href='@{${pageInvalid.url}(page=${pageInvalid.number-2},size=${pageInvalid.size})}'
+						title='Go to previous page'>«</a></li>
+					<li th:each='item : ${pageInvalid.items}'
+						th:class="${item.current}? 'active' : ''"><span
+						th:if='${item.current}' th:text='${item.number}'>1</span> <a
+						th:if='${not item.current}'
+						th:href='@{${pageInvalid.url}(page=${item.number-1},size=${pageInvalid.size})}'><span
+							th:text='${item.number}'>1</span></a></li>
+					<li th:class="${pageInvalid.hasNextPage}? '' : 'disabled'"><span
+						th:if='${not pageInvalid.hasNextPage}'>»</span> <a
+						th:if='${pageInvalid.hasNextPage}'
+						th:href='@{${pageInvalid.url}(page=${pageInvalid.number},size=${pageInvalid.size})}'
+						title='Go to next page'>»</a></li>
+					<li th:class="${pageInvalid.lastPage}? 'disabled' : ''"><span
+						th:if='${pageInvalid.lastPage}'>Last →</span> <a
+						th:if='${not pageInvalid.lastPage}'
+						th:href='@{${pageInvalid.url}(page=${pageInvalid.totalPages - 1},size=${pageInvalid.size})}'>Last
+							→</a></li>
+				</ul>
+			</div>
+		</div>
+
+
+	</div>
+
+	<script th:src="@{/webjars/jquery/3.2.1/jquery.min.js}" />
+	<script th:src="@{/webjars/bootstrap/3.3.7/js/bootstrap.min.js}" />
+	<!-- 	<script th:src="@{/js/app.js}"/> -->
+</body>
+</html>

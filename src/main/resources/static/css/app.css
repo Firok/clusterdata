@@ -1,0 +1,26 @@
+body {
+	background: white;
+}
+
+.App {
+  width: 100%;
+}
+
+.App-content {
+  margin: auto;
+  width: 80%;
+  padding-top: 90px;
+}
+
+.App-form {
+  margin: auto;
+  width: 80%;
+  padding-top: 90px;
+}
+
+.App-form-search{
+	text-align: right;
+}
+
+
+
